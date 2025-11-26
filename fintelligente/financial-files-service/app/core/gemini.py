@@ -1,35 +1,16 @@
-import google.generativeai as genai
+# app/core/gemini.py
 import os
 from dotenv import load_dotenv
+from google import genai
+from google.genai import types
+
 
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+API_KEY = os.getenv("GEMINI_API_KEY")
 
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=API_KEY)
 
-def classify_transactions_with_ai(transactions_list):
-    prompt = f"""
-Eres un clasificador financiero. Recibirás una lista de transacciones 
-en formato JSON.
-
-Debes devolver un JSON EXACTO con esta estructura:
-
-{{
-  "ingresos": <total>,
-  "egresos": <total>,
-  "categorias": {{
-      "alimentación": <total>,
-      "transporte": <total>,
-      "entretenimiento": <total>,
-      "salud": <total>,
-      "otros": <total>
-  }}
-}}
-
-Lista de transacciones:
-{transactions_list}
-"""
-
-    response = model.generate_content(prompt)
-    return response.text
+def get_gemini_client():
+    """Retorna la instancia del cliente de Gemini configurada."""
+    return client

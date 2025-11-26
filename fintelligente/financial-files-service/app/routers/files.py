@@ -1,25 +1,27 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
-from ..utils.parser import parse_financial_file
-from ..core.gemini import classify_transactions_with_ai
-import json
+from ..utils.parser import extract_text_from_pdf
+from ..ai_reader import analyze_financial_text
+from ..schemas import ReporteFinanciero
 
-router = APIRouter(prefix="/files", tags=["Files"])
+router = APIRouter()
 
-@router.post("/upload")
+
+@router.post("/upload-financial-pdf", response_model=ReporteFinanciero)
 async def upload_file(file: UploadFile = File(...)):
+    """
+    Recibe un PDF, extrae texto, lo analiza con Gemini y devuelve JSON clasificado.
+    """
+    if not file.filename.endswith('.pdf'):
+        raise HTTPException(status_code=400, detail="El archivo debe ser un PDF")
+
     try:
-        transactions = parse_financial_file(file)
+        # 1. Extraer texto
+        text_content = extract_text_from_pdf(file)
 
-        # Enviar a IA
-        ai_response = classify_transactions_with_ai(transactions)
+        # 2. Procesar con IA
+        result = analyze_financial_text(text_content)
 
-        # Convertimos el JSON que devuelve la IA
-        result = json.loads(ai_response)
-
-        return {
-            "status": "ok",
-            "data": result
-        }
+        return result
 
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e))

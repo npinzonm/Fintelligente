@@ -1,28 +1,14 @@
-import pandas as pd
-from io import BytesIO
+import pypdf
+from fastapi import UploadFile
 
-def parse_financial_file(file):
-    content = file.file.read()
-    filename = file.filename.lower()
 
-    df = None
-    if filename.endswith(".csv"):
-        df = pd.read_csv(BytesIO(content))
-    elif filename.endswith(".xlsx") or filename.endswith(".xls"):
-        df = pd.read_excel(BytesIO(content))
-    else:
-        raise ValueError("Formato no soportado. Usa CSV o Excel.")
+def extract_text_from_pdf(file: UploadFile) -> str:
+    """
+    Lee un archivo PDF en memoria y extrae su texto.
+    """
+    reader = pypdf.PdfReader(file.file)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text() + "\n"
 
-    # Normalizamos columnas comunes
-    df.columns = df.columns.str.lower()
-
-    # Buscamos nombre más probable
-    amount_col = next((c for c in df.columns if "monto" in c or "valor" in c), None)
-    desc_col = next((c for c in df.columns if "descr" in c), None)
-
-    if not amount_col or not desc_col:
-        raise ValueError("El archivo no contiene columnas válidas.")
-
-    transactions = df[[desc_col, amount_col]].to_dict(orient="records")
-
-    return transactions
+    return text

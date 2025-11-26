@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Menu, X, Home, FileText, User } from "lucide-react";
+import { Menu, X, Home, FileText } from "lucide-react";
 
 const Sidebar = () => {
   const [open, setOpen] = useState(false);
@@ -47,8 +47,8 @@ const Sidebar = () => {
               <FileText size={20} /> Cargar Archivos
             </a>
 
-            <a href="/profile" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600">
-              <User size={20} /> Perfil
+            <a href="/report" className="flex items-center gap-3 text-gray-700 hover:text-indigo-600">
+              <FileText size={20} /> Reporte
             </a>
           </nav>
         </div>

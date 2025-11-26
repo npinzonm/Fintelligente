@@ -1,14 +1,15 @@
 from pydantic import BaseModel
-from datetime import datetime
+from typing import List, Optional
 
+class Transaccion(BaseModel):
+    fecha: str
+    descripcion: str
+    monto: float
+    tipo: str  # "ingreso" o "gasto"
+    categoria: str # Ej: "Alimentación", "Salario", "Transporte"
 
-class FileResponse(BaseModel):
-    id: int
-    original_name: str
-    file_type: str | None
-    size: int | None
-    status: str
-    created_at: datetime
-
-    class Config:
-        from_attributes = True
+class ReporteFinanciero(BaseModel):
+    resumen: str
+    transacciones: List[Transaccion]
+    total_ingresos: float
+    total_gastos: float
