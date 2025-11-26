@@ -6,6 +6,7 @@ export const uploadFinancialFile = async (file: File) => {
   const formData = new FormData();
   formData.append("file", file);
 
+  /* Agregar ruta del backend */
   const response = await fetch("https://fintelligente-backend.onrender.com/upload-financial-pdf", {
     method: "POST",
     headers: {
