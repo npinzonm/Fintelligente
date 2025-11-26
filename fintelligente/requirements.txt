@@ -6,3 +6,5 @@ pdfplumber
 pandas
 openpyxl
 google-genai
+pypdf
+python-multipart

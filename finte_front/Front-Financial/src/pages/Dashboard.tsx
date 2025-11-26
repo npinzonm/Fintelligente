@@ -64,7 +64,7 @@ const PieChartActual = ({ data, title }: { data: ChartData, title: string }) => 
                             label={({ name, percent }) => `${name} (${(percent ? percent * 100 : 0).toFixed(1)}%)`}
                             labelLine={true}
                         >
-                            {data.map((entry, index) => (
+                            {data.map((_, index) => ( // <-- Usamos '_' para ignorar el valor
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
                         </Pie>
