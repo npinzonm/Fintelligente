@@ -1,0 +1,5 @@
+# Ignorar secretos de la aplicación
+.env
+
+# Ignorar entorno virtual
+.venv/
